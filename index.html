@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabio Mirabelli | Business Automation Specialist</title>
+    <style>
+        /* --- RESET & BASE --- */
+        :root {
+            --bg-color: #050505;
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+            --accent-color: #6366f1;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --card-hover: rgba(255, 255, 255, 0.07);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- BACKGROUND --- */
+        .ambient-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 10s infinite ease-in-out;
+        }
+        
+        .blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #4f46e5; }
+        .blob-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #c026d3; animation-delay: 2s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -30px) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* --- LAYOUT --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section { padding: 80px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        section:last-of-type { border-bottom: none; }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.02em; }
+        
+        h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            line-height: 1.1;
+            background: linear-gradient(to right, #fff, #999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        h2 { font-size: 2rem; margin-bottom: 30px; color: #fff; display: flex; align-items: center; gap: 10px;}
+        h2::before { content: ''; display: block; width: 8px; height: 8px; background: var(--accent-color); border-radius: 50%; box-shadow: 0 0 10px var(--accent-color); }
+
+        p { color: var(--text-muted); font-size: 1.05rem; }
+
+        /* --- COMPONENTS --- */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #fff;
+            color: #000;
+            font-weight: 600;
+            border-radius: 50px;
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255,255,255,0.1); }
+
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 25px;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- SPECIFIC STYLES --- */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: auto; 
+            padding-top: 15px;
+        }
+        
+        .skill-tag {
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: #e2e8f0;
+        }
+
+        .resume-grid { display: grid; gap: 20px; }
+
+        .resume-item {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .resume-item:last-child { border-bottom: none; }
+
+        .resume-date {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Projects Grid */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); 
+            gap: 25px;
+        }
+        
+        .project-img {
+            height: 220px;
+            background: #222;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .project-img::after {
+            content: '🔍';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+        }
+
+        .project-img:hover::after { opacity: 1; }
+        .project-img:hover img { opacity: 0.6; transform: scale(1.05); }
+        
+        .project-img img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover;
+            object-position: top;
+            transition: 0.5s; 
+        }
+
+        /* --- MODAL (LIGHTBOX) STYLES --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; top: 0;
+            width: 100%; height: 100%; 
+            background-color: rgba(0,0,0,0.95); 
+            backdrop-filter: blur(10px);
+            align-items: center; 
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show { opacity: 1; }
+
+        .modal-content {
+            max-width: 90%; 
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(99, 102, 241, 0.2);
+            object-fit: contain;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px; right: 40px;
+            color: #fff;
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .modal-close:hover { color: var(--accent-color); }
+
+        /* Form */
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #fff;
+            margin-bottom: 15px;
+            font-family: inherit;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .resume-item { grid-template-columns: 1fr; gap: 5px; }
+            h1 { font-size: 3rem; }
+            .project-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <header class="container" style="min-height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+    
+    <div class="profile-photo-container" style="width: 150px; height: 150px; margin-top: 40px; margin-bottom: 25px; position: relative;">
+        <img src="profile.jpg" alt="Fabio Mirabelli" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid var(--accent-color); box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);">
+    </div>
+
+    <p style="color: var(--accent-color); letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; font-weight: 700;">Portfolio & CV Digitale</p>
+    
+    <h1 style="
+        margin-bottom: 10px; 
+        background: linear-gradient(to right, #ffffff 40%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 4px 4px rgba(0,0,0,0.8));
+    ">Fabio Mirabelli</h1>
+    
+    <h2 style="font-size: 1.5rem; color: #a1a1aa; font-weight: 400; margin-top: 0; display: block;">Business Automation Specialist | n8n & Low-Code Expert</h2>
+    
+    <div class="glass-card" style="margin-top: 30px; max-width: 800px; text-align: left;">
+        <p>Unisco competenze tecniche nella creazione di workflow complessi con una solida etica lavorativa. Il mio obiettivo è trasformare processi manuali ripetitivi in flussi efficienti, integrando software eterogenei e riducendo l'errore umano.</p>
+    </div>
+
+    <div>
+        <a href="#projects" class="btn">Vedi Portfolio</a>
+        <a href="cv.pdf" download class="btn btn-outline">Scarica CV (PDF)</a>
+    </div>
+</header>
+
+    <section id="skills">
+        <div class="container">
+            <h2>Core Tech Skills</h2>
+            <div class="glass-card">
+                <p style="margin-bottom: 15px;">Stack Tecnologico & Competenze</p>
+                <div class="skills-container">
+                    <span class="skill-tag" style="border-color: #ff6d5a;">n8n Workflow Automation</span>
+                    <span class="skill-tag">API Integration (REST)</span>
+                    <span class="skill-tag" style="border-color: #10a37f;">OpenAI & LangChain</span>
+                    <span class="skill-tag">Airtable & Supabase</span>
+                    <span class="skill-tag">JSON & Data Structure</span>
+                    <span class="skill-tag">Google Workspace</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="resume">
+        <div class="container">
+            <h2>Esperienze Professionali</h2>
+            <p style="margin-bottom: 20px;">Background operativo che dimostra affidabilità e gestione dello stress.</p>
+            <div class="glass-card resume-grid">
+                
+                <div class="resume-item">
+                    <div class="resume-date">2021 - 2025</div>
+                    <div class="resume-content">
+                        <h3>Operatore Socioassistenziale</h3>
+                        <h4>Fo.Co. Onlus</h4>
+                        <p>Gestione della pressione in scenari critici e rispetto rigoroso dei protocolli. Esperienza diretta nell'analisi dei bisogni e problem solving.</p>
+                    </div>
+                </div>
+
+                <div class="resume-item">
+                    <div class="resume-date">2018 - 2021</div>
+                    <div class="resume-content">
+                        <h3>Gestore Operativo</h3>
+                        <h4>Caffè Renzelli</h4>
+                        <p>Responsabilità autonoma dei flussi di cassa, chiusura contabile e coordinamento turni. Ottimizzazione risorse durante i picchi di lavoro.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="education">
+        <div class="container">
+            <h2>Formazione</h2>
+            <div class="glass-card resume-grid">
+                
+                <div class="resume-item">
+                    <div class="resume-date">2025</div>
+                    <div class="resume-content">
+                        <h3>Trainee – AI & Business Automation</h3>
+                        <h4>Academy Rapido</h4>
+                        <p>300+ ore di formazione intensiva verticale su n8n, integrazioni API e automazione di business.</p>
+                    </div>
+                </div>
+
+                <div class="resume-item">
+                    <div class="resume-date">2024</div>
+                    <div class="resume-content">
+                        <h3>Laurea in Economia Aziendale</h3>
+                        <h4>Università Mercatorum</h4>
+                        <p>Comprensione delle logiche di business e gestione dei processi aziendali.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="container">
+            <h2>Portfolio n8n</h2>
+            <p style="margin-bottom: 30px;">Clicca sulle immagini per ingrandire i workflow.</p>
+            
+            <div class="project-grid">
+                
+                <article class="glass-card">
+                    <div class="project-img">
+                        <img src="progetto1(1).jpg" alt="Workflow n8n Smart Docflow">
+                    </div>
+                    <h3>Smart Cloud Sync & ChatOps</h3>
+                    <p class="small" style="margin-bottom: 15px;">Ecosistema automatizzato che elimina il data-entry manuale tra Email e Cloud.</p>
+                    <ul style="font-size: 0.9rem; color: #ccc; padding-left: 20px; list-style-type: disc;">
+                        <li>Salvataggio automatico allegati Gmail &rarr; Drive.</li>
+                        <li>Notifiche real-time su Slack.</li>
+                    </ul>
+                    <div class="skills-container">
+                        <span class="skill-tag" style="border-color: #ea4335;">Gmail</span>
+                        <span class="skill-tag" style="border-color: #0f9d58;">Drive</span>
+                        <span class="skill-tag" style="border-color: #4A154B;">Slack</span>
+                    </div>
+                </article>
+
+                <article class="glass-card">
+                    <div class="project-img">
+                        <img src="progetto1(2).jpg" alt="Logica Condizionale n8n">
+                    </div>
+                    <h3>Dynamic Drive Manager</h3>
+                    <p class="small" style="margin-bottom: 15px;">Evoluzione del sistema con logica condizionale avanzata basata sul contenuto.</p>
+                    <ul style="font-size: 0.9rem; color: #ccc; padding-left: 20px; list-style-type: disc;">
+                        <li>Analisi semantica del testo (Email o Slack).</li>
+                        <li>Filtro comandi ("Crea cartella: [NOME]").</li>
+                    </ul>
+                    <div class="skills-container">
+                        <span class="skill-tag">n8n Switch</span>
+                        <span class="skill-tag">Logic</span>
+                    </div>
+                </article>
+
+                <article class="glass-card">
+                    <div class="project-img">
+                        <img src="progetto2(1).jpg" alt="Automated SEO Content Engine">
+                    </div>
+                    <h3>Automated SEO Content Engine</h3>
+                    <p class="small" style="margin-bottom: 15px;">Sistema di generazione massiva di contenuti a partire da un piano editoriale su Sheets.</p>
+                    <ul style="font-size: 0.9rem; color: #ccc; padding-left: 20px; list-style-type: disc;">
+                        <li>Trigger programmato giornaliero.</li>
+                        <li>Generazione articoli completi tramite OpenAI.</li>
+                    </ul>
+                    <div class="skills-container">
+                        <span class="skill-tag" style="border-color: #10a37f;">OpenAI</span>
+                        <span class="skill-tag">Google Sheets</span>
+                        <span class="skill-tag">Notion</span>
+                    </div>
+                </article>
+
+                <article class="glass-card">
+                    <div class="project-img">
+                        <img src="progetto2(2).jpg" alt="Multi-Channel AI Strategist">
+                    </div>
+                    <h3>Multi-Channel Strategist</h3>
+                    <p class="small" style="margin-bottom: 15px;">Sistema a ciclo chiuso che adatta i contenuti e arricchisce il database di origine.</p>
+                    <ul style="font-size: 0.9rem; color: #ccc; padding-left: 20px; list-style-type: disc;">
+                        <li>Adattamento formato (Post IG, Email, Blog).</li>
+                        <li>Estrazione Keyword SEO e scrittura su Sheets.</li>
+                    </ul>
+                    <div class="skills-container">
+                        <span class="skill-tag">Data Enrichment</span>
+                        <span class="skill-tag">Context Awareness</span>
+                    </div>
+                </article>
+
+                <article class="glass-card">
+                    <div class="project-img">
+                        <img src="progetto3(1).jpg" alt="AI Lead Scouting Pipeline">
+                    </div>
+                    <h3>AI Lead Scouting Pipeline</h3>
+                    <p class="small" style="margin-bottom: 15px;">Automazione per la ricerca e qualificazione di lead da LinkedIn tramite Google API.</p>
+                    <ul style="font-size: 0.9rem; color: #ccc; padding-left: 20px; list-style-type: disc;">
+                        <li>Ricerca targetizzata su keyword specifiche.</li>
+                        <li>Estrazione e pulizia dati tramite AI.</li>
+                        <li>Salvataggio strutturato su Airtable.</li>
+                    </ul>
+                    <div class="skills-container">
+                        <span class="skill-tag">Google Search API</span>
+                        <span class="skill-tag">Airtable</span>
+                        <span class="skill-tag">OpenAI Parsing</span>
+                    </div>
+                </article>
+
+                <article class="glass-card">
+                    <div class="project-img">
+                        <img src="progetto3(2).jpg" alt="AI Lead Scoring System">
+                    </div>
+                    <h3>AI Lead Scoring & Quality Control</h3>
+                    <p class="small" style="margin-bottom: 15px;">Implementazione di un sistema di valutazione qualitativa dei lead tramite AI.</p>
+                    <ul style="font-size: 0.9rem; color: #ccc; padding-left: 20px; list-style-type: disc;">
+                        <li>Confronto semantico: Profilo vs Keyword.</li>
+                        <li>Scoring automatico (0-5) per priorizzare i contatti.</li>
+                        <li>Arricchimento database su Airtable con colonna "Relevance".</li>
+                    </ul>
+                    <div class="skills-container">
+                        <span class="skill-tag">AI Analysis</span>
+                        <span class="skill-tag">Data Enrichment</span>
+                        <span class="skill-tag">Logic</span>
+                    </div>
+                </article>
+
+                <article class="glass-card">
+                    <div class="project-img">
+                        <img src="progetto4(1).jpg" alt="AI Lead Qualification Funnel">
+                    </div>
+                    <h3>Smart Lead Qualification Loop</h3>
+                    <p class="small" style="margin-bottom: 15px;">Sistema end-to-end per la qualificazione e gestione automatica dei nuovi contatti.</p>
+                    <ul style="font-size: 0.9rem; color: #ccc; padding-left: 20px; list-style-type: disc;">
+                        <li>Ingestione dati da FormBricks e analisi budget/intent con AI.</li>
+                        <li><strong>Routing intelligente:</strong> Email di cortesia vs Sales Follow-up in base al valore.</li>
+                        <li>Creazione automatica Ticket Zendesk e notifica Slack alla risposta.</li>
+                    </ul>
+                    <div class="skills-container">
+                        <span class="skill-tag">FormBricks</span>
+                        <span class="skill-tag">Zendesk CRM</span>
+                        <span class="skill-tag">Slack</span>
+                    </div>
+                </article>
+
+                <article class="glass-card">
+                    <div class="project-img">
+                        <img src="progetto4(2).jpg" alt="Daily AI Reporting System">
+                    </div>
+                    <h3>Automated Daily BI Reporting</h3>
+                    <p class="small" style="margin-bottom: 15px;">Generazione automatica di reportistica aziendale giornaliera basata sui dati del supporto.</p>
+                    <ul style="font-size: 0.9rem; color: #ccc; padding-left: 20px; list-style-type: disc;">
+                        <li>Trigger programmato notturno (Cron 23:59).</li>
+                        <li>Estrazione ticket giornalieri e analisi andamento tramite AI.</li>
+                        <li>Invio report sintetico via Email al management.</li>
+                    </ul>
+                    <div class="skills-container">
+                        <span class="skill-tag">Data Aggregation</span>
+                        <span class="skill-tag">AI Summarization</span>
+                        <span class="skill-tag">Cron Scheduling</span>
+                    </div>
+                </article>
+
+                <article class="glass-card">
+                    <div class="project-img">
+                        <img src="progetto4(3).jpg" alt="Dynamic Doc Generation">
+                    </div>
+                    <h3>Dynamic Executive Reporting</h3>
+                    <p class="small" style="margin-bottom: 15px;">Evoluzione del sistema di reporting con generazione documentale cloud.</p>
+                    <ul style="font-size: 0.9rem; color: #ccc; padding-left: 20px; list-style-type: disc;">
+                        <li>Formattazione avanzata del report AI.</li>
+                        <li>Creazione/Aggiornamento automatico di Google Docs.</li>
+                        <li>Sharing automatico del documento con gli stakeholder.</li>
+                    </ul>
+                    <div class="skills-container">
+                        <span class="skill-tag">Google Docs API</span>
+                        <span class="skill-tag">Document Gen</span>
+                        <span class="skill-tag">Stakeholder Mgmt</span>
+                    </div>
+                </article>
+
+                <article class="glass-card">
+                    <div class="project-img">
+                        <img src="progetto5(1).jpg" alt="AI Customer Support Chatbot">
+                    </div>
+                    <h3>AI RAG Chatbot & Supabase Log</h3>
+                    <p class="small" style="margin-bottom: 15px;">Assistente virtuale avanzato addestrato su manualistica tecnica (RAG).</p>
+                    <ul style="font-size: 0.9rem; color: #ccc; padding-left: 20px; list-style-type: disc;">
+                        <li>Risposte basate su Knowledge Base PDF.</li>
+                        <li>Logging conversazioni su DB Supabase (PostgreSQL).</li>
+                        <li><strong>Fallback Intelligente:</strong> Se l'AI non sa rispondere, apre ticket su Zendesk.</li>
+                    </ul>
+                    <div class="skills-container">
+                        <span class="skill-tag">Vector Store</span>
+                        <span class="skill-tag">PostgreSQL</span>
+                        <span class="skill-tag">Zendesk API</span>
+                    </div>
+                </article>
+
+                <article class="glass-card">
+                    <div class="project-img">
+                        <img src="progetto5(2).jpg" alt="Web Dashboard & Insight Mining">
+                    </div>
+                    <h3>Dynamic BI Dashboard & Insight</h3>
+                    <p class="small" style="margin-bottom: 15px;">Generazione dinamica di interfacce web e analisi delle criticità.</p>
+                    <ul style="font-size: 0.9rem; color: #ccc; padding-left: 20px; list-style-type: disc;">
+                        <li>Webhook Response con pagina HTML + Grafici generati da AI.</li>
+                        <li>Analisi dei trend e rilevamento criticità (Insight Mining).</li>
+                        <li>Reportistica automatizzata via Google Docs & Email.</li>
+                    </ul>
+                    <div class="skills-container">
+                        <span class="skill-tag">HTML Generation</span>
+                        <span class="skill-tag">Data Viz</span>
+                        <span class="skill-tag">Insight Analysis</span>
+                    </div>
+                </article>
+
+                <article class="glass-card">
+                    <div class="project-img">
+                        <img src="progetto6.png" alt="Multi-Agent Marketing System">
+                    </div>
+                    <h3>Autonomous Multi-Agent Orchestrator</h3>
+                    <p class="small" style="margin-bottom: 15px;">Sistema complesso di agenti AI autonomi per la strategia e produzione contenuti.</p>
+                    <ul style="font-size: 0.9rem; color: #ccc; padding-left: 20px; list-style-type: disc;">
+                        <li><strong>Strategist Agent:</strong> Crea Brand Tone e Piano Editoriale.</li>
+                        <li><strong>Creator Agents:</strong> Sotto-flussi specializzati con Feedback Loop.</li>
+                        <li>Deployment automatico su Notion + Scheduling su Calendar.</li>
+                    </ul>
+                    <div class="skills-container">
+                        <span class="skill-tag">Multi-Agent Systems</span>
+                        <span class="skill-tag">Recursive Logic</span>
+                        <span class="skill-tag">Sub-Workflows</span>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container" style="text-align: center; max-width: 600px;">
+            <h2>Parliamo di automazione?</h2>
+            <p>Sono disponibile per nuove opportunità lavorative.</p>
+            
+            <form style="margin-top: 30px; text-align: left;">
+                <input type="text" placeholder="Il tuo nome">
+                <input type="email" placeholder="La tua email">
+                <textarea rows="4" placeholder="Messaggio"></textarea>
+                <button class="btn" style="width: 100%; border:none; cursor:pointer;">Invia Messaggio</button>
+            </form>
+
+            <div style="margin-top: 50px; display: flex; justify-content: center; gap: 20px; opacity: 0.7;">
+                <a href="https://www.linkedin.com/in/fabio-mirabelli-dev">LinkedIn</a>
+                <a href="#">GitHub</a>
+                <a href="mailto:fabio.mirabelli@outlook.it">Email</a>
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 40px; font-size: 0.8rem; color: #555;">
+        &copy; 2025 Fabio Mirabelli. Built with n8n & Code.
+    </footer>
+
+    <div id="imageModal" class="modal">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        // Logica Lightbox
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+        const closeBtn = document.querySelector(".modal-close");
+
+        document.querySelectorAll('.project-img img').forEach(img => {
+            img.addEventListener('click', function() {
+                modal.style.display = "flex";
+                setTimeout(() => { modal.classList.add('show'); }, 10);
+                modalImg.src = this.src;
+            });
+        });
+
+        function closeModal() {
+            modal.classList.remove('show');
+            setTimeout(() => { modal.style.display = "none"; }, 300);
+        }
+
+        closeBtn.onclick = closeModal;
+        window.onclick = function(event) {
+            if (event.target == modal) { closeModal(); }
+        }
+    </script>
+
+</body>
+</html>
